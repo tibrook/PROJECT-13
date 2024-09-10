@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat PoC</title>
+</head>
+<body>
+    <h2>Customer Service Chat</h2>
+    <div id="userForm">
+        <input type="text" id="username" placeholder="Enter your username" />
+        <button onclick="registerUser()">Join Chat</button>
+    </div>
+    <div id="chat" style="display:none;">
+        <div id="messages"></div>
+        <input type="text" id="message" placeholder="Type your message here..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script>
+        var stompClient = null;
+        var username = null;
+
+        function registerUser() {
+            username = document.getElementById('username').value.trim();
+            if (username) {
+                document.getElementById('userForm').style.display = 'none';
+                document.getElementById('chat').style.display = 'block';
+                connect();
+            }
+        }
+
+        function connect() {
+            var socket = new SockJS('http://127.0.0.1:8081/chat');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/messages', function (messageOutput) {
+                    showMessage(JSON.parse(messageOutput.body));
+                });
+            }, function (error) {
+                console.log('Connection error: ' + error);
+            });
+        }
+
+        function sendMessage() {
+            if (stompClient && stompClient.connected) {
+                var message = document.getElementById('message').value;
+                stompClient.send("/app/sendMessage", {}, JSON.stringify({'from': username, 'text': message}));
+                document.getElementById('message').value = '';
+            } else {
+                console.log('Connection not established yet.');
+            }
+        }
+
+        function showMessage(message) {
+            var messages = document.getElementById('messages');
+            var messageElement = document.createElement('div');
+            messageElement.appendChild(document.createTextNode(message.from + ": " + message.text));
+            messages.appendChild(messageElement);
+        }
+
+        // Optional: Auto-focus on the message input field
+        document.getElementById('message').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
