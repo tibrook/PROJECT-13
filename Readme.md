@@ -248,4 +248,4 @@ Le frontend sera accessible par défaut sur http://localhost:4200.
 ## Développement et amélioration
 
 
-Ce POC est un point de départ pour développer une application de chat plus complète. Vous pouvez ajouter des fonctionnalités supplémentaires telles que :
+Ce POC est un point de départ pour développer une application de chat plus complète. 
