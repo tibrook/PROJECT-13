@@ -209,8 +209,8 @@ git clone https://github.com/tibrook/OCP13
 ```
 ### 2. Configuration du Backend (Spring Boot)
  
-Installer les dépendances Maven
-Installez les dépendances Maven pour le backend :
+- Se rendre à l'URL du dépot cloné /demo
+- Installez les dépendances Maven pour le backend :
 
 ```
 mvn clean install
@@ -225,6 +225,8 @@ mvn spring-boot:run
 Le backend sera accessible par défaut sur http://127.0.0.1:8081.
 
 3. Configuration du Frontend (Angular)d 
+
+- Se rendre sur l'URL du dépot, /chat-app
 
 a. Installer les dépendances
 Exécutez la commande suivante pour installer les dépendances nécessaires à l'application Angular :
